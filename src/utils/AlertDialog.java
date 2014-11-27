@@ -17,13 +17,17 @@ import javafx.stage.StageStyle;
  * Time: 18:15
  */
 public class AlertDialog {
-    public static void showDialog(String messageText) {
-        showDialog(messageText, "");
+    public static void showDialog(String messageText, String title){
+        showDialog(messageText, "", title);
     }
 
-    public static void showDialog(String messageText, String cssstyle) {
+    public static void showDialog(String messageText) {
+        showDialog(messageText, "", "");
+    }
+
+    public static void showDialog(String messageText, String cssstyle, String title) {
         Stage stage = new Stage();
-        stage.initModality(Modality.WINDOW_MODAL);
+        stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UNDECORATED);
 
         Label label = new Label(messageText);
@@ -42,7 +46,11 @@ public class AlertDialog {
         }
 
         Scene sc = new Scene(vBox, 250, 150);
+        stage.setTitle(title);
         stage.setScene(sc);
-        stage.showAndWait();
+        stage.show();
+        stage.toFront();
+        // AlertDialog with Stage.showAndWait Throws a IllegalStateException
+        // showAndWait();
     }
 }

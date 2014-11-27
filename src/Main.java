@@ -9,8 +9,6 @@ import java.io.IOException;
 public class Main extends Application {
 
     private Stage primaryStage;
-    private GridPane rootlayout;
-
 
     @Override
     public void start(Stage primaryStage) {
@@ -27,7 +25,7 @@ public class Main extends Application {
         try {
             FXMLLoader loader = new FXMLLoader();
             loader.setLocation(Main.class.getResource("/view/rootScene.fxml"));
-            rootlayout = (GridPane) loader.load();
+            GridPane rootlayout = (GridPane) loader.load();
 
             Scene rootScene = new Scene(rootlayout);
             primaryStage.setScene(rootScene);

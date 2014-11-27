@@ -5,12 +5,18 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Timer;
 import utils.AlertDialog;
+
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,12 +39,16 @@ public class TimeController {
 
     private Timer timer;
     private Timeline mainTimeLine;
+    private Timeline dotsTimeLine;
 
     public void initData(int min, int sec) {
         timer = new Timer(min, sec);
-        minute.setText(String.valueOf(timer.getStartMinutes()));
-        second.setText(String.valueOf(timer.getStartSeconds()));
+        minute.setText(digitsPreparation(String.valueOf(timer.getStartMinutes())));
+        second.setText(digitsPreparation(String.valueOf(timer.getStartSeconds())));
         startTimer();
+
+        mainTimeLine.play();
+        dotsTimeLine.play();
     }
 
     private void startTimer() {
@@ -49,16 +59,26 @@ public class TimeController {
         timer.setStarted(true);
         timer.setCurrMin(timer.getStartMinutes());
         timer.setCurrSec(timer.getStartSeconds());
-        mainTimeLine.play();
+
+        dotsTimeLine = new Timeline(new KeyFrame(
+                Duration.seconds(0.5),
+                ae-> handleDotsAnimation()
+        ));
+        dotsTimeLine.setCycleCount(Animation.INDEFINITE);
+    }
+
+    private void handleDotsAnimation() {
+       if(timer.isStarted()){
+           if (!dots.isVisible()) {
+               dots.setVisible(true);
+           } else {
+               dots.setVisible(false);
+           }
+       }
     }
 
     private void handleTimeLine() {
-        if (!dots.isVisible()) {
-            dots.setVisible(true);
-        } else {
-            dots.setVisible(false);
-        }
-
+        //for debug
         System.out.println("curr min: " + timer.getCurrMin()
                 + " curr sec: " + timer.getCurrSec()
                 + " totalMin: " + timer.getStartMinutes()
@@ -71,7 +91,31 @@ public class TimeController {
                 System.out.println("ding dong");
                 timer.setStarted(false);
                 mainTimeLine.stop();
-                AlertDialog.showDialog("Alert!");
+                dotsTimeLine.stop();
+                AlertDialog.showDialog("Alert!", "Alarm!");
+
+                //close current window
+                Stage window = (Stage) acPanel.getScene().getWindow();
+                window.close();
+
+                try {
+                    //init default window
+                    Stage mainStage = new Stage();
+                    mainStage.setTitle("TomatoFocus");
+                    mainStage.setResizable(false);
+
+                    FXMLLoader loader = new FXMLLoader();
+                    loader.setLocation(getClass().getResource("/view/rootScene.fxml"));
+                    GridPane rootlayout = (GridPane) loader.load();
+
+                    Scene scene = new Scene(rootlayout);
+                    mainStage.setScene(scene);
+                    mainStage.show();
+                    mainStage.toBack();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
                 return;
             } else if (timer.getCurrSec() == 0) {
                 timer.setCurrSec(60);
@@ -94,14 +138,22 @@ public class TimeController {
         }
     }
 
+    private String digitsPreparation(String digit){
+        if(!digit.startsWith("0") && digit.length() < 2){
+            return "0" + digit;
+        }else return digit;
+    }
+
     public void pauseButtAction(ActionEvent e) {
-        if (mainTimeLine != null) {
-            if(mainTimeLine.getStatus() == Animation.Status.RUNNING){
+        if (mainTimeLine != null && dotsTimeLine!= null) {
+            if (mainTimeLine.getStatus() == Animation.Status.RUNNING) {
                 mainTimeLine.pause();
+                dotsTimeLine.pause();
                 stopButton.setText("Play");
                 timer.setStarted(false);
-            }else if (mainTimeLine.getStatus() == Animation.Status.PAUSED){
+            } else if (mainTimeLine.getStatus() == Animation.Status.PAUSED) {
                 mainTimeLine.play();
+                dotsTimeLine.play();
                 stopButton.setText("Pause");
                 timer.setStarted(true);
             }
