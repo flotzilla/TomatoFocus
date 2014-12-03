@@ -41,35 +41,67 @@ public class TimeController {
 
     private Timer timer;
     private Timeline mainTimeLine;
+    private Timeline dotsTimeLine;
 
     public void initData(int min, int sec) {
         timer = new Timer(min, sec);
-        minute.setText(String.valueOf(timer.getStartMinutes()));
-        second.setText(String.valueOf(timer.getStartSeconds()));
+        minute.setText(digitsPreparation(String.valueOf(timer.getStartMinutes())));
+        second.setText(digitsPreparation(String.valueOf(timer.getStartSeconds())));
+
         Stage s = (Stage) acPanel.getScene().getWindow();
         s.setTitle("Ticking out");
         s.setOnHiding(new onHideEvent());
+
         startTimer();
+        mainTimeLine.play();
+        dotsTimeLine.play();
+    }
+
+    private String digitsPreparation(String digit) {
+        if (!digit.startsWith("0") && digit.length() < 2) {
+            return "0" + digit;
+        } else if (digit.equals("0")) {
+            return "00";
+        } else return digit;
     }
 
     private void startTimer() {
         mainTimeLine = new Timeline(new KeyFrame(
                 Duration.seconds(1),
-                ae -> handleTimeLine()));
+                ae -> handleTimeLineAnimation()));
         mainTimeLine.setCycleCount(Animation.INDEFINITE);
-        timer.setStarted(true);
+
+        dotsTimeLine = new Timeline(new KeyFrame(
+                Duration.seconds(0.5),
+                ae -> handleDotsAnimation()
+        ));
+        dotsTimeLine.setCycleCount(Animation.INDEFINITE);
+
         timer.setCurrMin(timer.getStartMinutes());
         timer.setCurrSec(timer.getStartSeconds());
+        timer.setStarted(true);
+    }
+
+    private void handleDotsAnimation() {
+        if (timer.isStarted()) {
+            if (!dots.isVisible()) {
+                dots.setVisible(true);
+            } else {
+                dots.setVisible(false);
+            }
+        }
+
         mainTimeLine.play();
     }
 
-    private void handleTimeLine() {
+    private void handleTimeLineAnimation() {
         if (!dots.isVisible()) {
             dots.setVisible(true);
         } else {
             dots.setVisible(false);
         }
 
+        //for debug
         System.out.println("curr min: " + timer.getCurrMin()
                 + " curr sec: " + timer.getCurrSec()
                 + " totalMin: " + timer.getStartMinutes()
@@ -80,6 +112,7 @@ public class TimeController {
         if (timer.isStarted()) {
             if (timer.getCurrMin() == 0 && timer.getCurrSec() == 0) {
                 stopTimerAction();
+                alertAction();
                 return;
             } else if (timer.getCurrSec() == 0) {
                 timer.setCurrSec(60);
@@ -102,21 +135,29 @@ public class TimeController {
         }
     }
 
-    private void stopTimerAction(){
+    private void alertAction() {
         System.out.println("ding dong");
+        AlertDialog.showDialog("Alert!", "Alarm!");
+    }
+
+    private void stopTimerAction() {
         timer.setStarted(false);
         mainTimeLine.stop();
-                AlertDialog.showDialog("Alert!");
+        dotsTimeLine.stop();
+        Stage window = (Stage) acPanel.getScene().getWindow();
+        window.close();
     }
 
     public void pauseButtAction(ActionEvent e) {
-        if (mainTimeLine != null) {
+        if (mainTimeLine != null && dotsTimeLine != null) {
             if (mainTimeLine.getStatus() == Animation.Status.RUNNING) {
                 mainTimeLine.pause();
+                dotsTimeLine.pause();
                 stopButton.setText("Play");
                 timer.setStarted(false);
             } else if (mainTimeLine.getStatus() == Animation.Status.PAUSED) {
                 mainTimeLine.play();
+                dotsTimeLine.play();
                 stopButton.setText("Pause");
                 timer.setStarted(true);
             }
@@ -126,6 +167,8 @@ public class TimeController {
     private class onHideEvent implements EventHandler<WindowEvent> {
         @Override
         public void handle(WindowEvent event) {
+            if (timer.isStarted()) stopTimerAction();
+
             Stage primaryStage = new Stage();
             primaryStage.setTitle("Tomato Focus");
             primaryStage.setResizable(false);
@@ -138,6 +181,7 @@ public class TimeController {
                 Scene rootScene = new Scene(rootlayout);
                 primaryStage.setScene(rootScene);
                 primaryStage.show();
+                primaryStage.toBack();
             } catch (IOException e) {
                 e.printStackTrace();
             }

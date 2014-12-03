@@ -16,7 +16,6 @@ public class Main extends Application {
         this.primaryStage.setTitle("Tomato Focus");
         this.primaryStage.setResizable(false);
 
-
         buildRootScene();
     }
 
@@ -30,6 +29,7 @@ public class Main extends Application {
             Scene rootScene = new Scene(rootlayout);
             primaryStage.setScene(rootScene);
             primaryStage.show();
+            primaryStage.toFront();
         } catch (IOException e) {
             e.printStackTrace();
         }
