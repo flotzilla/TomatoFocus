@@ -9,7 +9,8 @@ ChangeLog
 ====================================================
 v0.3
 - fixed button;
-- fixed time display
+- added ring sound on alarm
+- added time format on start
 
 v0.2
 - fix some bugs;

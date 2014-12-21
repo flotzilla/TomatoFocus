@@ -23,19 +23,20 @@ public class Timer {
         this.startMinutes = minutes;
 
         calculateTotalTime();
+        prepareTime();
+    }
+
+    private void prepareTime() {
+        if (startSeconds > 60) {
+            startMinutes = startSeconds / 60;
+            startSeconds = startSeconds - (startMinutes * 60);
+        }
     }
 
     private void calculateTotalTime() {
         if (startSeconds != 0 && startMinutes != 0)
             totalTimeSec = startMinutes * 60 + startSeconds;
     }
-
-    public void calculateTotalTime(int min, int sec) {
-        this.startSeconds = sec;
-        this.startMinutes = min;
-        calculateTotalTime();
-    }
-
 
     public int getTotalTimeSec() {
         return totalTimeSec;
