@@ -15,6 +15,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import javafx.util.Duration;
+import model.SoundPlayer;
 import model.Timer;
 import utils.AlertDialog;
 
@@ -138,6 +139,8 @@ public class TimeController {
     private void alertAction() {
         System.out.println("ding dong");
         AlertDialog.showDialog("Alert!", "Alarm!");
+        SoundPlayer sp = new SoundPlayer();
+        sp.play();
     }
 
     private void stopTimerAction() {
