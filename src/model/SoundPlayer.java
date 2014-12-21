@@ -10,9 +10,8 @@ public class SoundPlayer {
     public static AudioClip AUDIO_PLAYER = null;
 
     public SoundPlayer() {
-        if (AUDIO_PLAYER == null) {
+        if (AUDIO_PLAYER == null)
             AUDIO_PLAYER = new AudioClip(this.getClass().getResource(MEDIA_URL).toString());
-        }
     }
 
     public void play() {
