@@ -25,7 +25,7 @@ public class AlertDialog {
         showDialog(messageText, "", "");
     }
 
-    public static void showDialog(String messageText, String cssstyle, String title) {
+    public static void showDialog(String messageText, String title, String cssstyle) {
         Stage stage = new Stage();
         stage.initModality(Modality.APPLICATION_MODAL);
         stage.initStyle(StageStyle.UNDECORATED);
@@ -40,7 +40,7 @@ public class AlertDialog {
         vBox.setAlignment(Pos.CENTER);
 
         if (!cssstyle.isEmpty()) {
-            vBox.setStyle("-fx-background: #FFFFFF;");
+            vBox.setStyle("-fx-background: #cce8c8;");
         } else {
             vBox.setStyle(cssstyle);
         }

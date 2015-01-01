@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
@@ -52,10 +54,32 @@ public class TimeController {
         Stage s = (Stage) acPanel.getScene().getWindow();
         s.setTitle("Ticking out");
         s.setOnHiding(new onHideEvent());
+        addContextMenu();
 
         startTimer();
         mainTimeLine.play();
         dotsTimeLine.play();
+    }
+
+    private void addContextMenu() {
+        ContextMenu cm = new ContextMenu();
+        MenuItem stopItem = new MenuItem("Stop Timer");
+        MenuItem pauseItem = new MenuItem("Pause/Start Timer");
+        cm.getItems().addAll(stopItem, pauseItem);
+        stopItem.setOnAction(actionEvent -> {
+            stopTimerAction();
+        });
+
+        pauseItem.setOnAction(this::pauseButtAction);
+
+        acPanel.setOnMousePressed(actionEv -> {
+            if (actionEv.isPrimaryButtonDown()) {
+                cm.hide();
+            }
+            if (actionEv.isSecondaryButtonDown()) {
+                cm.show(acPanel, actionEv.getScreenX(), actionEv.getScreenY());
+            }
+        });
     }
 
     private String digitsPreparation(String digit) {
@@ -80,6 +104,7 @@ public class TimeController {
 
         timer.setCurrMin(timer.getStartMinutes());
         timer.setCurrSec(timer.getStartSeconds());
+        calculateColors();
         timer.setStarted(true);
     }
 
@@ -108,9 +133,12 @@ public class TimeController {
                 + " totalMin: " + timer.getStartMinutes()
                 + " totalSec: " + timer.getStartSeconds()
                 + " timerTextMin " + minute.getText()
-                + " timerTxtSec: " + second.getText());
+                + " timerTxtSec: " + second.getText()
+                + " currTotalSec:" + timer.getCurrentTotalTimeSec()
+                + " currColorState: " + timer.getTimerState().toString());
 
         if (timer.isStarted()) {
+            calculateColors();
             if (timer.getCurrMin() == 0 && timer.getCurrSec() == 0) {
                 stopTimerAction();
                 alertAction();
@@ -132,9 +160,22 @@ public class TimeController {
             } else {
                 second.setText(Integer.toString(timer.getCurrSec()));
             }
-
         }
     }
+
+
+    private void calculateColors() {
+        Timer.TimerState timerState = timer.calculateFractionalTime();
+        if (timerState == Timer.TimerState.WHOLE_TIME) {
+            acPanel.setStyle("-fx-background-color: #2d803f");
+        } else if (timerState == Timer.TimerState.TWOTHIRD_OF_TIME) {
+            acPanel.setStyle("-fx-background-color: #ffc90f");
+        } else {
+            //One_third
+            acPanel.setStyle("-fx-background-color: #8b2a32");
+        }
+    }
+
 
     private void alertAction() {
         System.out.println("ding dong");
@@ -184,7 +225,6 @@ public class TimeController {
                 Scene rootScene = new Scene(rootlayout);
                 primaryStage.setScene(rootScene);
                 primaryStage.show();
-                primaryStage.toBack();
             } catch (IOException e) {
                 e.printStackTrace();
             }

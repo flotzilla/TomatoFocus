@@ -2,11 +2,14 @@ TOMATO FOCUS
 ====================================================
 
 This app is an implementation of Pomodoro technique.
-It was written on JavaFX 8.
+Application was written using JavaFX 8.
 I use latest JDK 1.8.0_25.
 
 ChangeLog
 ====================================================
+v0.4
+-added Context menu to pause/stop timer
+
 v0.3
 - fixed button;
 - added ring sound on alarm
