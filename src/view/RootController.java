@@ -41,7 +41,9 @@ public class RootController {
                     try {
                         FXMLLoader loader = new FXMLLoader(getClass().getResource("TimeScene.fxml"));
 
-                        Stage stage = new Stage(StageStyle.TRANSPARENT);
+                        Stage stage = new Stage(StageStyle.DECORATED);
+                        stage.setAlwaysOnTop(true);
+                        stage.setResizable(false);
                         stage.setScene(new Scene((AnchorPane) loader.load()));
 
                         TimeController controller = loader.<TimeController>getController();

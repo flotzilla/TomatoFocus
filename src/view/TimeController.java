@@ -128,14 +128,14 @@ public class TimeController {
         }
 
         //for debug
-        System.out.println("curr min: " + timer.getCurrMin()
-                + " curr sec: " + timer.getCurrSec()
-                + " totalMin: " + timer.getStartMinutes()
-                + " totalSec: " + timer.getStartSeconds()
-                + " timerTextMin " + minute.getText()
-                + " timerTxtSec: " + second.getText()
-                + " currTotalSec:" + timer.getCurrentTotalTimeSec()
-                + " currColorState: " + timer.getTimerState().toString());
+//        System.out.println("curr min: " + timer.getCurrMin()
+//                + " curr sec: " + timer.getCurrSec()
+//                + " totalMin: " + timer.getStartMinutes()
+//                + " totalSec: " + timer.getStartSeconds()
+//                + " timerTextMin " + minute.getText()
+//                + " timerTxtSec: " + second.getText()
+//                + " currTotalSec:" + timer.getCurrentTotalTimeSec()
+//                + " currColorState: " + timer.getTimerState().toString());
 
         if (timer.isStarted()) {
             calculateColors();
@@ -160,6 +160,9 @@ public class TimeController {
             } else {
                 second.setText(Integer.toString(timer.getCurrSec()));
             }
+
+            Stage window = (Stage) acPanel.getScene().getWindow();
+            window.setTitle(Integer.toString(timer.getCurrMin()) + " : " + Integer.toString(timer.getCurrSec()));
         }
     }
 
