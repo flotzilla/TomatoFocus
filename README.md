@@ -8,7 +8,8 @@ I use latest JDK 1.8.0_25.
 ChangeLog
 ====================================================
 v0.4
--added Context menu to pause/stop timer
+- added Context menu to pause/stop timer
+- changed queue of window appearing
 
 v0.3
 - fixed button;

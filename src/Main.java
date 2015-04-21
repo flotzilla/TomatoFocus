@@ -19,7 +19,7 @@ public class Main extends Application {
         buildRootScene();
     }
 
-    private void buildRootScene() {
+    public void buildRootScene() {
 
         try {
             FXMLLoader loader = new FXMLLoader();

@@ -1,13 +1,19 @@
 package utils;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
+import java.io.IOException;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,14 +39,31 @@ public class AlertDialog {
         Label label = new Label(messageText);
 
         Button button = new Button("Ok");
-        button.setOnAction(e -> stage.close());
+        button.setOnAction(event -> {
+            stage.close();
+            Stage primaryStage = new Stage();
+            primaryStage.setTitle("Tomato Focus");
+            primaryStage.setResizable(false);
+
+            try {
+                FXMLLoader loader = new FXMLLoader();
+                loader.setLocation(AlertDialog.class.getResource("/view/rootScene.fxml"));
+                GridPane rootlayout = (GridPane) loader.load();
+
+                Scene rootScene = new Scene(rootlayout);
+                primaryStage.setScene(rootScene);
+                primaryStage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
 
         VBox vBox = new VBox(20);
         vBox.getChildren().addAll(label, button);
         vBox.setAlignment(Pos.CENTER);
 
         if (!cssstyle.isEmpty()) {
-            vBox.setStyle("-fx-background: #cce8c8;");
+            vBox.setStyle("-fx-background: #cedde8;");
         } else {
             vBox.setStyle(cssstyle);
         }

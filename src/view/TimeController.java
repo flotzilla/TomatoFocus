@@ -167,12 +167,12 @@ public class TimeController {
     private void calculateColors() {
         Timer.TimerState timerState = timer.calculateFractionalTime();
         if (timerState == Timer.TimerState.WHOLE_TIME) {
-            acPanel.setStyle("-fx-background-color: #2d803f");
+            acPanel.setStyle("-fx-background-color: #2ce652");
         } else if (timerState == Timer.TimerState.TWOTHIRD_OF_TIME) {
-            acPanel.setStyle("-fx-background-color: #ffc90f");
+            acPanel.setStyle("-fx-background-color: #ffe539");
         } else {
             //One_third
-            acPanel.setStyle("-fx-background-color: #8b2a32");
+            acPanel.setStyle("-fx-background-color: #ff4943");
         }
     }
 
@@ -212,22 +212,6 @@ public class TimeController {
         @Override
         public void handle(WindowEvent event) {
             if (timer.isStarted()) stopTimerAction();
-
-            Stage primaryStage = new Stage();
-            primaryStage.setTitle("Tomato Focus");
-            primaryStage.setResizable(false);
-
-            try {
-                FXMLLoader loader = new FXMLLoader();
-                loader.setLocation(getClass().getResource("/view/rootScene.fxml"));
-                GridPane rootlayout = (GridPane) loader.load();
-
-                Scene rootScene = new Scene(rootlayout);
-                primaryStage.setScene(rootScene);
-                primaryStage.show();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 }
